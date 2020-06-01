@@ -4,9 +4,18 @@ const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
 
-app.use(cors()); // use CORS for all requests and all routes
+// app.use(cors()); // use CORS for all requests and all routes
 
-// parse application/x-www-form-urlencoded
+const domain = 'http://mannar-test.integrations.localcb.in:9090';
+// const domain = 'http://mannar-test.localcb.in:8080';
+app.use(
+    cors({
+        credentials: true,
+        origin: true,
+    })
+);
+
+// parse application/x-www-form-urlencoded.
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
@@ -26,82 +35,124 @@ let payload = {
     integrationName: 'getaccept',
     steps: integSteps,
     isNotAnGetAcceptAdmin: false,
-    quoteTypeOption: {
-        isDraft: false,
-        isOverridable: true,
-        value: null,
+    preferences: {
+        documentTypeOption: {
+            isDraft: false,
+            isOverridable: true,
+            value: 'GETACCEPT_TEMPLATE',
+        },
+        quoteTypeOption: {
+            isDraft: false,
+            isOverridable: true,
+            value: null,
+        },
+        templateOption: {
+            isDraft: false,
+            isOverridable: true,
+            value: null,
+            searchable: true,
+            options: [],
+            // options: [
+            //     {
+            //         displayName: 'Quotes Template 1',
+            //         description: 'Quotes / Quotes Template 1',
+            //         value: 'qt1',
+            //     },
+            //     {
+            //         displayName: 'Quotes Template 2',
+            //         description: 'Quotes / Quotes Template 2',
+            //         value: 'qt2',
+            //     },
+            //     {
+            //         displayName: 'Quotes Template X',
+            //         description: 'Quotes / Quotes Template x',
+            //         value: 'qtx',
+            //     },
+            // ],
+        },
+        isAttachChargebeeQuote: {
+            isDraft: false,
+            isOverridable: true,
+            value: true,
+        },
+        defaultSenderOption: {
+            isDraft: false,
+            isOverridable: true,
+            value: null,
+            searchable: true,
+            options: [],
+            // options: [
+            //     {
+            //         displayName: 'Ashik Nesin',
+            //         description: 'mail@ashiknesin.com',
+            //         value: 'an',
+            //     },
+            //     {
+            //         displayName: 'Quotes Template 2',
+            //         description: 'Quotes / Quotes Template 2',
+            //         value: 'qt2',
+            //     },
+            //     {
+            //         displayName: 'Quotes Template X',
+            //         description: 'Quotes / Quotes Template x',
+            //         value: 'qtx',
+            //     },
+            // ],
+        },
+        isAllowOnlyDefaultSender: {
+            isDraft: false,
+            isOverridable: true,
+            value: true,
+        },
+        actionOnSignOption: {
+            isDraft: false,
+            value: null,
+            isOverridable: true,
+        },
+        isDeletePreviousVersions: {
+            isDraft: false,
+            value: false,
+            isOverridable: true,
+        },
+        getAcceptFieldsOption: {
+            isDraft: false,
+            options: [],
+            // options: [
+            //     {
+            //         displayName: 'Customer Company',
+            //         value: 'ga_cc',
+            //         cbQuoteFieldValue: 'cb_rc',
+            //     },
+            //     {
+            //         displayName: 'Recipient First Name',
+            //         value: 'ga_rfa',
+            //         cbQuoteFieldValue: null,
+            //     },
+            //     {
+            //         displayName: 'Document Number',
+            //         value: 'ga_dn',
+            //         cbQuoteFieldValue: null,
+            //     },
+            // ],
+        },
+        cbQuoteFieldsOption: {
+            options: [
+                {
+                    displayName: 'Recipient Company',
+                    value: 'cb_rc',
+                },
+                {
+                    displayName: 'Customer First Name',
+                    value: 'cb_cfn',
+                },
+                {
+                    displayName: 'Quote ID',
+                    value: 'cb_qi',
+                },
+            ],
+        },
     },
-    documentTypeOption: {
-        isDraft: false,
-        isOverridable: true,
-        value: 'GETACCEPT_TEMPLATE',
-    },
-    templateOption: {
-        isDraft: false,
-        isOverridable: true,
-        value: null,
-        searchable: true,
-        options: [
-            {
-                displayName: 'Quotes Template 1',
-                description: 'Quotes / Quotes Template 1',
-                value: 'qt1',
-            },
-            {
-                displayName: 'Quotes Template 2',
-                description: 'Quotes / Quotes Template 2',
-                value: 'qt2',
-            },
-            {
-                displayName: 'Quotes Template X',
-                description: 'Quotes / Quotes Template x',
-                value: 'qtx',
-            },
-        ],
-    },
-    isAttachChargebeeQuote: {
-        isDraft: false,
-        isOverridable: true,
-        value: true,
-    },
-    defaultSenderOption: {
-        isDraft: false,
-        isOverridable: true,
-        value: null,
-        searchable: true,
-        options: [
-            {
-                displayName: 'Ashik Nesin',
-                description: 'mail@ashiknesin.com',
-                value: 'an',
-            },
-            {
-                displayName: 'Quotes Template 2',
-                description: 'Quotes / Quotes Template 2',
-                value: 'qt2',
-            },
-            {
-                displayName: 'Quotes Template X',
-                description: 'Quotes / Quotes Template x',
-                value: 'qtx',
-            },
-        ],
-    },
-    isAllowOnlyDefaultSender: {
-        isDraft: false,
-        isOverridable: true,
-        value: true,
-    },
-    actionOnSignOption: {
-        isDraft: false,
-        value: null,
-        isOverridable: true,
-    },
-    isDeletePreviousVersions: {
-        isDraft: false,
-        value: false,
-        isOverridable: true,
-    },
+
     isFeatureAllowed: false,
     isUnlinkAllowed: true,
     dashboardOverview: {
@@ -112,42 +163,6 @@ let payload = {
         'You must map all GetAccept fields to Chargebee quote fields to proceed.',
     isDraft: false,
     errorAlerts: ['TEMPLATE_UNAVAILABLE', 'SENDER_UNAVAILABLE'],
-    getAcceptFieldsOption: {
-        isDraft: false,
-        options: [
-            {
-                displayName: 'Customer Company',
-                value: 'ga_cc',
-                cbQuoteFieldValue: 'cb_rc',
-            },
-            {
-                displayName: 'Recipient First Name',
-                value: 'ga_rfa',
-                cbQuoteFieldValue: null,
-            },
-            {
-                displayName: 'Document Number',
-                value: 'ga_dn',
-                cbQuoteFieldValue: null,
-            },
-        ],
-    },
-    cbQuoteFieldsOption: {
-        options: [
-            {
-                displayName: 'Recipient Company',
-                value: 'cb_rc',
-            },
-            {
-                displayName: 'Customer First Name',
-                value: 'cb_cfn',
-            },
-            {
-                displayName: 'Quote ID',
-                value: 'cb_qi',
-            },
-        ],
-    },
 };
 
 const sendViaGetAcceptPayload = {
@@ -231,27 +246,30 @@ app.get('/', (req, res, next) => {
     res.send('hello there');
 });
 
-app.get('/third_party/ui/getaccept', (req, res) => {
+app.get('/getaccept/ui/config', (req, res) => {
     res.send({ ...payload, step: integSteps[currentStepIndex] });
 });
 
-app.get('/getaccept/send_via_get_accept', (req, res) => {
+app.get('/getaccept/ui/send_via_get_accept', (req, res) => {
     res.send(sendViaGetAcceptPayload);
 });
 
-app.post('/third_party/ui/getaccept/stage', (req, res) => {
+app.post('/getaccept/ui/stage', (req, res) => {
     currentStepIndex += 1;
     res.send({ ...payload, step: integSteps[currentStepIndex] });
 });
 
-app.post('/third_party/ui/getaccept/save', (req, res) => {
+app.post('/getaccept/ui/save', (req, res) => {
     payload = {
         ...payload,
-        [req.body.prefName]: {
-            ...payload[req.body.prefName],
-            value: req.body.value,
-            isDraft: false,
-            isOverridable: true,
+        preferences: {
+            ...payload.preferences,
+            [req.body.prefName]: {
+                ...payload[req.body.prefName],
+                value: req.body.value,
+                isDraft: false,
+                isOverridable: true,
+            },
         },
     };
 
@@ -268,8 +286,63 @@ app.post('/third_party/ui/getaccept/save', (req, res) => {
     res.send({ ...payload, step: integSteps[currentStepIndex] });
 });
 
-app.post('/third_party/ui/getaccept/save_draft', (req, res) => {
+app.post('/getaccept/ui/save_draft', (req, res) => {
     res.send({ ...payload, step: integSteps[currentStepIndex] });
+});
+
+app.get(`/getaccept/ui/getaccept_templates`, (req, res) => {
+    res.send([
+        {
+            displayName: 'Quotes Template 1',
+            description: 'Quotes / Quotes Template 1x',
+            value: 'qt1',
+        },
+        {
+            displayName: 'Quotes Template 2',
+            description: 'Quotes / Quotes Template 2',
+            value: 'qt2',
+        },
+        {
+            displayName: 'Quotes Template X',
+            description: 'Quotes / Quotes Template x',
+            value: 'qtx',
+        },
+    ]);
+});
+
+app.get(`/getaccept/ui/getaccept_template_fields`, (req, res) => {
+    res.send([
+        {
+            displayName: 'Customer Company',
+            value: 'ga_cc',
+            cbQuoteFieldValue: 'cb_rc',
+        },
+        {
+            displayName: 'Recipient First Name',
+            value: 'ga_rfa',
+            cbQuoteFieldValue: null,
+        },
+        {
+            displayName: 'Document Number',
+            value: 'ga_dn',
+            cbQuoteFieldValue: null,
+        },
+    ]);
+});
+
+app.get(`/getaccept/ui/getaccept_template_users`, (req, res) => {
+    res.send([
+        {
+            displayName: 'Ashik Nesin',
+            description: 'mail@ashiknesin.com',
+            value: 'an',
+        },
+        {
+            displayName: 'R. Nesin',
+            description: 'r@nesin.io',
+            value: 'qt2',
+        },
+    ]);
 });
 
 /* start the app */
